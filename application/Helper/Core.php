@@ -16,11 +16,14 @@ class Core
 {
     const DEFAULT_CONTENT      = '';
     const DEFAULT_CONTENT_TYPE = '';
-    const CACHE_TIMEOUT        = 3600;
+    const CACHE_TIMEOUT        = 3600 * 24 * 365;
 
     private $outputContentType = null;
     private $outputContent     = null;
 
+    /**
+     * Core constructor.
+     */
     public function __construct()
     {
         $this->outputContentType = self::DEFAULT_CONTENT_TYPE;
@@ -28,6 +31,15 @@ class Core
         return;
     }
 
+    /**
+     * Show Information
+     *
+     * @param int $status
+     * @param string $message
+     * @param mixed $data
+     *
+     * @return bool
+     */
     private function information($status = 0, $message = '', $data = null)
     {
         $return = array();
@@ -36,9 +48,18 @@ class Core
         $return['data'] = $data;
         $this->outputContentType = 'application/json';
         $this->outputContent = json_encode($return);
+        header('HTTP/1.1 404 Not Found');
+        header('Status: 404 Not Found');
         return true;
     }
 
+    /**
+     * Get File
+     *
+     * @param string $file
+     *
+     * @return array|null
+     */
     private function getFile($file)
     {
         $return = array();
@@ -63,6 +84,14 @@ class Core
         return $return;
     }
 
+    /**
+     * Merge URL
+     *
+     * @param string $url
+     * @param string $file
+     *
+     * @return string $url
+     */
     private function mergeURL($url, $file)
     {
         $informationURL = parse_url($file);
@@ -78,6 +107,16 @@ class Core
         return $fileNew;
     }
 
+    /**
+     * Handle Content
+     *
+     * @param string $url
+     * @param string $content
+     * @param string $contentType
+     * @param string $version
+     *
+     * @return mixed|string
+     */
     private function handleContent($url, $content, $contentType, $version)
     {
         $contentType = strtolower($contentType);
@@ -113,14 +152,18 @@ class Core
         return $content;
     }
 
+    /**
+     * Output
+     * @return bool
+     */
     private function output()
     {
         $inputVersion = Input::get('v', '');
         $inputFile = Input::get('f', '');
         // Get From Cache
-        $cacheKeyFull = sprintf('%s.%s', $inputFile, $inputVersion);
-        $resultCache = Cache::get($cacheKeyFull, null);
-        if ($resultCache != null) {
+        $cacheKeyFull = sprintf('Files:%s:%s', $inputFile, $inputVersion);
+        if (Cache::isExist($cacheKeyFull)) {
+            $resultCache = Cache::get($cacheKeyFull, null);
             $this->outputContentType = $resultCache[0];
             $this->outputContent = $resultCache[1];
             return true;
@@ -134,14 +177,9 @@ class Core
                 continue;
             }
             // 判断域名是否允许
-            $allowList = array();
-            $allow = AllowDomain::all();
-            foreach($allow as $value){
-                array_push($allowList, $value->domain);
-            }
             $informationURL = parse_url($file);
             $host = isset($informationURL['host']) ? $informationURL['host'] : '';
-            if (!in_array($host, $allowList)) {
+            if (!AllowDomain::isAllow($host)) {
                 return $this->information(0, sprintf('Host %s is not allowed.', $host), null);
             }
             // 添加版本
@@ -149,9 +187,9 @@ class Core
                 $file .= sprintf('?v=%s', $inputVersion);
             }
             // Get From Cache
-            $cacheKey = $file;
-            $resultCache = Cache::get($cacheKey, null);
-            if ($resultCache != null) {
+            $cacheKey = sprintf('File:%s', $file);
+            if (Cache::isExist($cacheKey)) {
+                $resultCache = Cache::get($cacheKey, null);
                 $this->outputContentType = $resultCache[0];
                 $this->outputContent .= $resultCache[1];
                 continue;
@@ -179,6 +217,10 @@ class Core
         return true;
     }
 
+    /**
+     * Show
+     * @return bool
+     */
     public function show()
     {
         $this->output();
