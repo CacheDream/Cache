@@ -3,7 +3,7 @@
 ## Overview
 
 
-> CodeMommy Cache
+> CodeMommy Cache is a service to cache static files.
 
 Visit [Website](http://www.codemommy.com) to get more information.
 
