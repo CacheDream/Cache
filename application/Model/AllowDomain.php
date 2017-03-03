@@ -1,7 +1,7 @@
 <?php
 
 /**
- * CodeMommy WebPHP
+ * CodeMommy Cache
  * @author  Candison November <www.kandisheng.com>
  */
 
@@ -10,13 +10,13 @@ namespace Model;
 use CodeMommy\WebPHP\Model;
 
 /**
- * Class Demo
+ * Class AllowDomain
  * @package Model
  */
-class Demo extends Model
+class AllowDomain extends Model
 {
     /**
      * @var string
      */
-    protected $table = 'demo';
+    protected $table = 'allow_domain';
 }

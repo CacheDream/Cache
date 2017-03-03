@@ -7,11 +7,10 @@
 
 namespace Helper;
 
-use MatthiasMullie\Minify;
 use CodeMommy\WebPHP\Cache;
-use CodeMommy\WebPHP\Config;
-
 use CodeMommy\WebPHP\Input;
+use MatthiasMullie\Minify;
+use Model\AllowDomain;
 
 class Core
 {
@@ -135,10 +134,14 @@ class Core
                 continue;
             }
             // 判断域名是否允许
-            $allow = Config::get('allow', array());
+            $allowList = array();
+            $allow = AllowDomain::all();
+            foreach($allow as $value){
+                array_push($allowList, $value->domain);
+            }
             $informationURL = parse_url($file);
             $host = isset($informationURL['host']) ? $informationURL['host'] : '';
-            if (!in_array($host, $allow)) {
+            if (!in_array($host, $allowList)) {
                 return $this->information(0, sprintf('Host %s is not allowed.', $host), null);
             }
             // 添加版本
