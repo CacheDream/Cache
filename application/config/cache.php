@@ -8,7 +8,7 @@ return array(
         'port' => 11211
     ),
     'redis'    => array(
-        'host' => 'localhost',
+        'host' => 'ServerTest',
         'port' => 6379
     )
 );
