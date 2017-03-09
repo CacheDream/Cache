@@ -132,6 +132,10 @@ class Core
             $mini->add($content);
             $content = $mini->minify();
         }
+        // Merge Javascript
+        if (strpos($contentType, 'javascript') !== false) {
+            $content = ';' . $content;
+        }
         // Replace path in CSS
         if (strpos($contentType, 'css') !== false) {
             $preg = '/url\((.*)\)/sU';
