@@ -2,8 +2,7 @@
 
 ## Overview
 
-
-> CodeMommy Cache is a service to cache static files.
+> Cache tool for static files
 
 Visit [Website](http://www.codemommy.com) to get more information.
 
