@@ -151,6 +151,8 @@ class Core
                         $fileNew = sprintf('url(/?v=%s&f=%s)', $version, $fileNew);
                     }
                     $content = str_replace(sprintf('url(%s)', $file), $fileNew, $content);
+                } else {
+                    $content = str_replace(sprintf('url(%s)', $file), sprintf('url("%s")', $file), $content);
                 }
             }
         }
