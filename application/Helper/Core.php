@@ -166,7 +166,7 @@ class Core
         $inputVersion = Input::get('v', '');
         $inputFile = Input::get('f', '');
         // Get From Cache
-        $cacheKeyFull = sprintf('Files:%s:%s', $inputFile, $inputVersion);
+        $cacheKeyFull = sprintf('CodeMommy.Cache.Files:%s:%s', $inputFile, $inputVersion);
         if (Cache::isExist($cacheKeyFull)) {
             $resultCache = Cache::get($cacheKeyFull, null);
             $this->outputContentType = $resultCache[0];
@@ -192,7 +192,7 @@ class Core
                 $file .= sprintf('?v=%s', $inputVersion);
             }
             // Get From Cache
-            $cacheKey = sprintf('File:%s', $file);
+            $cacheKey = sprintf('CodeMommy.Cache.File:%s', $file);
             if (Cache::isExist($cacheKey)) {
                 $resultCache = Cache::get($cacheKey, null);
                 $this->outputContentType = $resultCache[0];
