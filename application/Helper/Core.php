@@ -142,7 +142,7 @@ class Core
             preg_match_all($preg, $content, $result);
             $fileList = $result[1];
             foreach ($fileList as $file) {
-                if (substr(strtolower($file), 0, 5) != 'data:') {
+                if (substr(strtolower($file), 0, 5) != 'data:' || substr(strtolower($file), 0, 6) != '"data:' || substr(strtolower($file), 0, 6) != '\'data:') {
                     $fileNew = $this->mergeURL($url, $file);
                     $fileNew = urlencode($fileNew);
                     if (empty($version)) {
