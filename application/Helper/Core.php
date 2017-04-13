@@ -144,6 +144,7 @@ class Core
             foreach ($fileList as $file) {
                 if (substr(strtolower($file), 0, 5) != 'data:') {
                     $fileNew = $this->mergeURL($url, $file);
+                    $fileNew = urlencode($fileNew);
                     if (empty($version)) {
                         $fileNew = sprintf('url(/?f=%s)', $fileNew);
                     } else {
